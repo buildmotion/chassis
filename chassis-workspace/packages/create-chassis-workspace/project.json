@@ -1,0 +1,41 @@
+{
+  "name": "create-chassis-workspace",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/create-chassis-workspace/bin",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/create-chassis-workspace",
+        "main": "packages/create-chassis-workspace/bin/index.ts",
+        "tsConfig": "packages/create-chassis-workspace/tsconfig.lib.json",
+        "assets": ["packages/create-chassis-workspace/*.md"]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs create-chassis-workspace {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/create-chassis-workspace/**/*.ts",
+          "packages/create-chassis-workspace/package.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/create-chassis-workspace/jest.config.ts"
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["chassis"]
+}

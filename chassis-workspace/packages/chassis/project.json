@@ -1,0 +1,63 @@
+{
+  "name": "chassis",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/chassis/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/chassis",
+        "main": "packages/chassis/src/index.ts",
+        "tsConfig": "packages/chassis/tsconfig.lib.json",
+        "assets": [
+          "packages/chassis/*.md",
+          {
+            "input": "./packages/chassis/src",
+            "glob": "**/!(*.ts)",
+            "output": "./src"
+          },
+          {
+            "input": "./packages/chassis/src",
+            "glob": "**/*.d.ts",
+            "output": "./src"
+          },
+          {
+            "input": "./packages/chassis",
+            "glob": "generators.json",
+            "output": "."
+          },
+          {
+            "input": "./packages/chassis",
+            "glob": "executors.json",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs chassis {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/chassis/**/*.ts",
+          "packages/chassis/package.json",
+          "packages/chassis/generators.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/chassis/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
